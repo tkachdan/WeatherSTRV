@@ -8,6 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.weather.tkachdan.com.weather.R;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -26,6 +29,14 @@ public class SecondFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    ImageView image;
+    TextView date;
+    TextView temp;
+    TextView wetherDesc;
+
+    ListView listView;
+
 
     private OnFragmentInteractionListener mListener;
 
@@ -63,8 +74,24 @@ public class SecondFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_second, container, false);
+        View view = inflater.inflate(R.layout.fragment_second, container, false);
+        /*// Inflate the layout for this fragment
+        List<ForecastEntity> list = new ArrayList<ForecastEntity>();
+        ForecastEntity first = new ForecastEntity(null,"asd","qwe","wer");
+        ForecastEntity second = new ForecastEntity(null,"aqsd","qwe","wer");
+
+        List<ForecastEntity> forecast = new ArrayList<ForecastEntity>();
+        forecast.add(first);
+        forecast.add(second);
+
+
+        ArrayAdapter<ForecastEntity> adapter = new ForecastAdapter(getActivity(),forecast);
+        listView = (ListView) view
+                .findViewById(R.id.listView);
+        listView.setAdapter(adapter);*/
+        return view;
+
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event

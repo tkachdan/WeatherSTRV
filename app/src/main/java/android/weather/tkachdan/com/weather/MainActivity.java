@@ -37,7 +37,7 @@ public class MainActivity extends ActionBarActivity
         setContentView(R.layout.activity_main);
 
         firstFragment = new FirstFragment();
-        secondFragment = new SecondFragment();
+        secondFragment = new Fragment();
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
