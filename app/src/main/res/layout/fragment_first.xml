@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/Theme.Base.Light"
-            android:text="area"
+            android:text=""
             android:id="@+id/area_textView"
             android:layout_below="@+id/imageView"
             android:layout_centerHorizontal="true"
@@ -37,7 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="temp"
+            android:text=""
             android:id="@+id/temp_textView"
             android:layout_below="@+id/area_textView"
             android:layout_centerHorizontal="true"
@@ -49,7 +49,7 @@
             />
 
         <View
-            android:layout_width="150dp"
+            android:layout_width="110dp"
             android:layout_height="1dp"
             android:background="@color/light_blue"
             android:layout_below="@+id/temp_textView"
@@ -57,19 +57,17 @@
             android:layout_marginTop="40dp" />
 
         <TableLayout
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_alignTop="@+id/temp_textView"
             android:layout_marginTop="120dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
             android:shrinkColumns="60"
 
             android:id="@+id/tableLayout">
 
             <TableRow
                 android:layout_gravity="center"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical|center"
 
@@ -83,7 +81,8 @@
                     android:layout_alignTop="@+id/imageView1"
                     android:layout_alignRight="@+id/area_textView"
                     android:layout_alignEnd="@+id/area_textView"
-                    android:layout_marginRight="40dp" />
+                    android:layout_marginRight="50dp"
+                    android:layout_below="@+id/humidity_textView" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -92,7 +91,9 @@
                     android:layout_toEndOf="@+id/temp_textView"
                     android:src="@drawable/ic_weather_precipitation"
                     android:layout_centerVertical="true"
-                    android:layout_toRightOf="@+id/temp_textView" />
+                    android:layout_toRightOf="@+id/wind_direction_textView"
+                    android:layout_gravity="center"
+                    android:paddingLeft="18dp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -102,12 +103,12 @@
                     android:src="@drawable/ic_weather_pressure"
                     android:layout_alignTop="@+id/imageView2"
                     android:layout_toLeftOf="@+id/temp_textView"
-                    android:layout_marginLeft="40dp" />
+                    android:layout_marginLeft="50dp" />
             </TableRow>
 
             <TableRow
                 android:layout_gravity="center"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical|center"
                 android:layout_marginTop="10dp">
@@ -120,8 +121,9 @@
                     android:layout_below="@+id/imageView4"
                     android:layout_toLeftOf="@+id/imageView2"
                     android:layout_toStartOf="@+id/imageView2"
-                    android:layout_marginRight="40dp"
-                    android:textSize="20dip" />
+                    android:layout_marginRight="50dp"
+                    android:textSize="20dip"
+                    android:paddingRight="10dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -131,7 +133,8 @@
                     android:layout_below="@+id/imageView3"
                     android:layout_centerHorizontal="true"
                     android:textSize="20dip"
-                    android:layout_gravity="center_horizontal" />
+                    android:layout_gravity="center_horizontal"
+                    android:paddingLeft="18dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -141,14 +144,14 @@
                     android:layout_below="@+id/imageView3"
                     android:layout_toRightOf="@+id/humidity_textView"
                     android:layout_toEndOf="@+id/humidity_textView"
-                    android:layout_marginLeft="40dp"
+                    android:layout_marginLeft="50dp"
                     android:textSize="20dip" />
 
             </TableRow>
 
             <TableRow
                 android:layout_gravity="center"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical|center"
                 android:showDividers="middle"

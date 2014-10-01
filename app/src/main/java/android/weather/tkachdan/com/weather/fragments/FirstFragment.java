@@ -45,6 +45,7 @@ public class FirstFragment extends Fragment implements GooglePlayServicesClient.
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    final String DEGREE = "\u00b0";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -160,17 +161,17 @@ public class FirstFragment extends Fragment implements GooglePlayServicesClient.
             area.setText(currentWeather.getRegion() + ", " + currentWeather.getCoutry());
 
             TextView temp = (TextView) getView().findViewById(R.id.temp_textView);
-            temp.setText(currentWeather.getTemp_C() + " | " + currentWeather.getWeatherDesc());
+            temp.setText(currentWeather.getTemp_C() + DEGREE + " | " + currentWeather.getWeatherDesc());
 
             TextView humidity = (TextView) getView().findViewById(R.id.humidity_textView);
-            humidity.setText(currentWeather.getHumidity());
+            humidity.setText(currentWeather.getHumidity() + "%");
             TextView precip = (TextView) getView().findViewById(R.id.precip_textView);
-            precip.setText(currentWeather.getPrecipMM());
+            precip.setText(currentWeather.getPrecipMM() + " mm");
             TextView pressure = (TextView) getView().findViewById(R.id.pressure_textView);
-            pressure.setText(currentWeather.getPressure());
+            pressure.setText(currentWeather.getPressure() + " hPa");
 
             TextView windSpeed = (TextView) getView().findViewById(R.id.wind_speed_textView);
-            windSpeed.setText(currentWeather.getWindspeedKmph());
+            windSpeed.setText(currentWeather.getWindspeedKmph() + " km/h");
 
             TextView windDir = (TextView) getView().findViewById(R.id.wind_direction_textView);
             windDir.setText(currentWeather.getWindDir());
