@@ -2,6 +2,7 @@ package android.weather.tkachdan.com.weather.fragments;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,6 +17,10 @@ import android.weather.tkachdan.com.weather.fragments.entity.CurrentWeather;
 import android.weather.tkachdan.com.weather.fragments.utils.JsonParser;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient;
+import com.google.android.gms.location.LocationClient;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -35,7 +40,7 @@ import java.io.InputStreamReader;
  * Use the {@link FirstFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FirstFragment extends Fragment {
+public class FirstFragment extends Fragment implements GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -51,6 +56,8 @@ public class FirstFragment extends Fragment {
     public String imageURL = "http://java.sogeti.nl/JavaBlog/wp-content/uploads/2009/04/android_icon_256.png";
 
     private OnFragmentInteractionListener mListener;
+
+    LocationClient mLocationClient;
 
     /**
      * Use this factory method to create a new instance of
@@ -82,6 +89,8 @@ public class FirstFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
+        mLocationClient = new LocationClient(getActivity().getApplicationContext(), this, this);
+
 
     }
 
@@ -97,11 +106,36 @@ public class FirstFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        TextView text = (TextView) getView().findViewById(R.id.area_textView);
+        mLocationClient.connect();
 
 
-        new HttpAsyncTask().execute("http://api.worldweatheronline.com/free/v1/weather.ashx?q=40%2C20&format=json&num_of_days=5&includelocation=yes&key=4ae48b676ad301da1f7fcb2c1e351b291c8223f0");
+        //TextView text = (TextView) getView().findViewById(R.id.area_textView);
 
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mLocationClient.disconnect();
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        Location location = mLocationClient.getLastLocation();
+        Double lat = location.getLatitude();
+        Double lon = location.getLongitude();
+        Log.d("lat", lat.toString());
+        new HttpAsyncTask().execute("http://api.worldweatheronline.com/free/v1/weather.ashx?q=" + lat + "%2C" + lon + "&format=json&num_of_days=5&includelocation=yes&key=4ae48b676ad301da1f7fcb2c1e351b291c8223f0");
+    }
+
+    @Override
+    public void onDisconnected() {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
 
     }
 
