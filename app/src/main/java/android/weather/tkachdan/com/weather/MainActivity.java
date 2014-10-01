@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.weather.tkachdan.com.weather.fragments.FirstFragment;
 import android.weather.tkachdan.com.weather.fragments.SecondFragment;
+import android.widget.TextView;
 
 
 public class MainActivity extends ActionBarActivity
@@ -75,6 +76,7 @@ public class MainActivity extends ActionBarActivity
             case 1:
                 fragment = firstFragment;
                 mTitle = "Today";
+                TextView text = (TextView) findViewById(R.id.tvTitle);
 
                 break;
             case 2:

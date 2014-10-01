@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.weather.tkachdan.com.weather.R;
 import android.weather.tkachdan.com.weather.adapter.ForecastAdapter;
-import android.weather.tkachdan.com.weather.fragments.async.DownloadImageTask;
 import android.weather.tkachdan.com.weather.fragments.entity.ForecastEntity;
 import android.weather.tkachdan.com.weather.fragments.utils.JsonParser;
 import android.widget.ArrayAdapter;
@@ -99,11 +98,12 @@ public class SecondFragment extends Fragment implements GooglePlayServicesClient
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_second, container, false);
+        forecast = new ArrayList<ForecastEntity>();
         new HttpAsyncTask().execute("http://api.worldweatheronline.com/free/v1/weather.ashx?q="
                 + FirstFragment.LAT + "%2C" + FirstFragment.LON + "&format=json&num_of_days=5&includelocatio" +
                 "n=yes&key=4ae48b676ad301da1f7fcb2c1e351b291c8223f0");
 
-        forecast = new ArrayList<ForecastEntity>();
+
         //forecast.add(first);
 
 
@@ -115,6 +115,7 @@ public class SecondFragment extends Fragment implements GooglePlayServicesClient
     @Override
     public void onStart() {
         super.onStart();
+
 
     }
 
@@ -148,12 +149,10 @@ public class SecondFragment extends Fragment implements GooglePlayServicesClient
 
             for (ForecastEntity e : forecast) {
                 String imageUrl = e.getImage();
-                new DownloadImageTask(e)
-                        .execute(imageUrl);
 
-                if (e.getImageBitmap() == null) {
-                    int a;
-                }
+                // AsyncTask task = new DownloadImageTask(e)
+                //       .execute(imageUrl);
+
 
             }
             adapter = new ForecastAdapter(getActivity(), forecast);

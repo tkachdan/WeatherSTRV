@@ -3,7 +3,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="141dp"
-    android:padding="6dip"
     android:layout_gravity="center_horizontal"
     android:background="@drawable/view_listview_item_bg"
     android:visibility="visible">
@@ -55,7 +54,7 @@
         android:layout_toEndOf="@+id/temp_forecast_textView"
         android:layout_alignParentBottom="true"
         android:layout_toRightOf="@+id/temp_forecast_textView"
-        android:layout_marginBottom="15dp"
+        android:layout_marginBottom="20dp"
         android:layout_marginLeft="40dp"
         android:textSize="18dip" />
 

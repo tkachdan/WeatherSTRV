@@ -17,9 +17,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.weather.tkachdan.com.weather.adapter.NavDrawerListAdapter;
+import android.weather.tkachdan.com.weather.fragments.entity.NavDrawerItem;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import java.util.ArrayList;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -48,6 +51,7 @@ public class NavigationDrawerFragment extends Fragment {
      * Helper component that ties the action bar to the navigation drawer.
      */
     private ActionBarDrawerToggle mDrawerToggle;
+    ArrayList<NavDrawerItem> list;
 
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerListView;
@@ -96,16 +100,13 @@ public class NavigationDrawerFragment extends Fragment {
                 selectItem(position);
             }
         });
-
-        mDrawerListView.setAdapter(new ArrayAdapter<String>(
-                getActionBar().getThemedContext(),
-                android.R.layout.simple_list_item_1,
-                android.R.id.text1,
-                new String[]{
-                        getString(R.string.today),
-                        getString(R.string.forecast),
-
-                }));
+        NavDrawerItem first = new NavDrawerItem("Today", R.drawable.ic_drawer_today_light);
+        NavDrawerItem second = new NavDrawerItem("Forecast", R.drawable.ic_drawer_forecast_dark);
+        list = new ArrayList<NavDrawerItem>();
+        list.add(first);
+        list.add(second);
+        NavDrawerListAdapter adapter = new NavDrawerListAdapter(inflater.getContext(), list);
+        mDrawerListView.setAdapter(adapter);
 
 
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
@@ -200,6 +201,16 @@ public class NavigationDrawerFragment extends Fragment {
         }
         if (mCallbacks != null) {
             mCallbacks.onNavigationDrawerItemSelected(position);
+        }
+        if (position == 0 && list != null) {
+            list.get(0).setIcon(R.drawable.ic_drawer_today_light);
+            list.get(1).setIcon(R.drawable.ic_drawer_forecast_dark);
+
+        }
+        if (position == 1 && list != null) {
+            list.get(0).setIcon(R.drawable.ic_drawer_today_dark);
+            list.get(1).setIcon(R.drawable.ic_drawer_forecast_light);
+
         }
     }
 
