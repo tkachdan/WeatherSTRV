@@ -2,15 +2,37 @@ package android.weather.tkachdan.com.weather.fragments;
 
 import android.app.Activity;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.weather.tkachdan.com.weather.R;
+import android.weather.tkachdan.com.weather.adapter.ForecastAdapter;
+import android.weather.tkachdan.com.weather.fragments.async.DownloadImageTask;
+import android.weather.tkachdan.com.weather.fragments.entity.ForecastEntity;
+import android.weather.tkachdan.com.weather.fragments.utils.JsonParser;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -20,7 +42,7 @@ import android.widget.TextView;
  * Use the {@link SecondFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SecondFragment extends Fragment {
+public class SecondFragment extends Fragment implements GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -34,6 +56,8 @@ public class SecondFragment extends Fragment {
     TextView date;
     TextView temp;
     TextView wetherDesc;
+    List<ForecastEntity> forecast;
+    ArrayAdapter<ForecastEntity> adapter;
 
     ListView listView;
 
@@ -75,23 +99,109 @@ public class SecondFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_second, container, false);
-        /*// Inflate the layout for this fragment
-        List<ForecastEntity> list = new ArrayList<ForecastEntity>();
-        ForecastEntity first = new ForecastEntity(null,"asd","qwe","wer");
-        ForecastEntity second = new ForecastEntity(null,"aqsd","qwe","wer");
+        new HttpAsyncTask().execute("http://api.worldweatheronline.com/free/v1/weather.ashx?q="
+                + FirstFragment.LAT + "%2C" + FirstFragment.LON + "&format=json&num_of_days=5&includelocatio" +
+                "n=yes&key=4ae48b676ad301da1f7fcb2c1e351b291c8223f0");
 
-        List<ForecastEntity> forecast = new ArrayList<ForecastEntity>();
-        forecast.add(first);
-        forecast.add(second);
+        forecast = new ArrayList<ForecastEntity>();
+        //forecast.add(first);
 
 
-        ArrayAdapter<ForecastEntity> adapter = new ForecastAdapter(getActivity(),forecast);
-        listView = (ListView) view
-                .findViewById(R.id.listView);
-        listView.setAdapter(adapter);*/
         return view;
 
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+
+    }
+
+    @Override
+    public void onDisconnected() {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+    }
+
+    private class HttpAsyncTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... urls) {
+
+            return GET(urls[0]);
+        }
+
+        // onPostExecute displays the results of the AsyncTask.
+        @Override
+        protected void onPostExecute(String result) {
+            JsonParser parser = new JsonParser();
+            forecast = parser.parseForecast();
+
+            for (ForecastEntity e : forecast) {
+                String imageUrl = e.getImage();
+                new DownloadImageTask(e)
+                        .execute(imageUrl);
+
+                if (e.getImageBitmap() == null) {
+                    int a;
+                }
+
+            }
+            adapter = new ForecastAdapter(getActivity(), forecast);
+            View view = getView();
+            listView = (ListView) view
+                    .findViewById(R.id.listView);
+            listView.setAdapter(adapter);
+
+        }
+    }
+
+    private static String convertInputStreamToString(InputStream inputStream) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        String line = "";
+        String result = "";
+        while ((line = bufferedReader.readLine()) != null)
+            result += line;
+
+        inputStream.close();
+        return result;
+
+    }
+
+    public static String GET(String url) {
+        InputStream inputStream = null;
+        String result = "";
+        try {
+
+            // create HttpClient
+            HttpClient httpclient = new DefaultHttpClient();
+
+            // make GET request to the given URL
+            HttpResponse httpResponse = httpclient.execute(new HttpGet(url));
+
+            // receive response as inputStream
+            inputStream = httpResponse.getEntity().getContent();
+
+            // convert inputstream to string
+            if (inputStream != null)
+                result = convertInputStreamToString(inputStream);
+            else
+                result = "Did not work!";
+
+        } catch (Exception e) {
+            Log.d("InputStream", e.getLocalizedMessage());
+        }
+
+        return result;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

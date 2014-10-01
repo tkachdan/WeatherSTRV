@@ -5,12 +5,80 @@
     tools:context="android.weather.tkachdan.com.weather.fragments.SecondFragment">
 
     <!-- TODO: Update blank fragment layout -->
-
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Large Text"
-        android:id="@+id/textView"
-        android:layout_gravity="center" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="Second fragment"
+        android:visibility="invisible" />
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="141dp"
+        android:padding="6dip"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/view_listview_item_bg"
+        android:visibility="visible">
+
+        <ImageView
+            android:id="@+id/forecastImage_imageView"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentTop="true"
+            android:contentDescription="TODO"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="20dp" />
+
+        <TextView
+            android:id="@+id/temp_forecast_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="26dip"
+            android:ellipsize="marquee"
+            android:singleLine="true"
+
+            android:textSize="33dip"
+            android:layout_below="@+id/day_textView"
+            android:layout_alignLeft="@+id/day_textView"
+            android:layout_alignStart="@+id/day_textView"
+            android:layout_marginTop="10dp"
+            android:layout_alignParentBottom="true"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignWithParentIfMissing="true"
+            android:layout_toRightOf="@id/forecastImage_imageView"
+            android:gravity="center_vertical"
+
+            android:textSize="33dip"
+            android:layout_marginLeft="20dp"
+            android:id="@+id/day_textView"
+            android:layout_marginTop="20dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+
+            android:id="@+id/cond_forecast_textView"
+            android:layout_toEndOf="@+id/temp_forecast_textView"
+            android:layout_alignParentBottom="true"
+            android:layout_toRightOf="@+id/temp_forecast_textView"
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="40dp"
+            android:textSize="18dip" />
+
+    </RelativeLayout>
+
+    <ListView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/listView"
+        android:layout_gravity="center">
+
+
+    </ListView>
+
 </FrameLayout>

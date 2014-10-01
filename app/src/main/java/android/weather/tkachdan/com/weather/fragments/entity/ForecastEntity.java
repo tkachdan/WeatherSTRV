@@ -6,28 +6,30 @@ import android.graphics.Bitmap;
  * Created by tkachdan on 10/1/2014.
  */
 public class ForecastEntity {
-    private Bitmap image;
+    private String image;
     private String date;
-    private String temp;
+    private String temp_C;
+    private String temp_F;
     private String wetherDesc;
+    private Bitmap imageBitmap;
 
+    public Bitmap getImageBitmap() {
+        return imageBitmap;
+    }
+
+    public void setImageBitmap(Bitmap imageBitmap) {
+        this.imageBitmap = imageBitmap;
+    }
 
     public ForecastEntity() {
 
     }
 
-    public ForecastEntity(Bitmap image, String date, String temp, String wetherDesc) {
-        this.image = image;
-        this.date = date;
-        this.temp = temp;
-        this.wetherDesc = wetherDesc;
-    }
-
-    public Bitmap getImage() {
+    public String getImage() {
         return image;
     }
 
-    public void setImage(Bitmap image) {
+    public void setImage(String image) {
         this.image = image;
     }
 
@@ -39,12 +41,20 @@ public class ForecastEntity {
         this.date = date;
     }
 
-    public String getTemp() {
-        return temp;
+    public String getTemp_C() {
+        return temp_C;
     }
 
-    public void setTemp(String temp) {
-        this.temp = temp;
+    public void setTemp_C(String temp_C) {
+        this.temp_C = temp_C;
+    }
+
+    public String getTemp_F() {
+        return temp_F;
+    }
+
+    public void setTemp_F(String temp_F) {
+        this.temp_F = temp_F;
     }
 
     public String getWetherDesc() {
@@ -52,6 +62,15 @@ public class ForecastEntity {
     }
 
     public void setWetherDesc(String wetherDesc) {
+        this.wetherDesc = wetherDesc;
+    }
+
+    public ForecastEntity(String image, String date, String temp_C, String temp_F, String wetherDesc) {
+
+        this.image = image;
+        this.date = date;
+        this.temp_C = temp_C;
+        this.temp_F = temp_F;
         this.wetherDesc = wetherDesc;
     }
 }

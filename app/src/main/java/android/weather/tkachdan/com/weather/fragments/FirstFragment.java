@@ -45,7 +45,10 @@ public class FirstFragment extends Fragment implements GooglePlayServicesClient.
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    final String DEGREE = "\u00b0";
+    public static final String DEGREE = "\u00b0";
+    public static String JSON;
+    public static Double LAT;
+    public static Double LON;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -124,15 +127,17 @@ public class FirstFragment extends Fragment implements GooglePlayServicesClient.
     @Override
     public void onConnected(Bundle bundle) {
         Location location = mLocationClient.getLastLocation();
-        Double lat = location.getLatitude();
-        Double lon = location.getLongitude();
-        Log.d("lat", lat.toString());
-        new HttpAsyncTask().execute("http://api.worldweatheronline.com/free/v1/weather.ashx?q=" + lat + "%2C" + lon + "&format=json&num_of_days=5&includelocation=yes&key=4ae48b676ad301da1f7fcb2c1e351b291c8223f0");
+        LAT = location.getLatitude();
+        LON = location.getLongitude();
+        new HttpAsyncTask().execute("http://api.worldweatheronline.com/free/v1/weather.ashx?q=" + LAT + "%2C" + LON + "&format=json&num_of_days=5&includelocation=yes&key=4ae48b676ad301da1f7fcb2c1e351b291c8223f0");
+        JSON = "http://api.worldweatheronline.com/free/v1/weather.ashx?q=" +
+                "" + LAT + "%2C" + LON + "&format=json&num_of_days=5&includelocat" +
+                "ion=yes&key=4ae48b676ad301da1f7fcb2c1e351b291c8223f0";
     }
 
     @Override
     public void onDisconnected() {
-
+        mLocationClient.disconnect();
     }
 
     @Override
@@ -220,7 +225,7 @@ public class FirstFragment extends Fragment implements GooglePlayServicesClient.
         } catch (Exception e) {
             Log.d("InputStream", e.getLocalizedMessage());
         }
-
+        JSON = result;
         return result;
     }
 

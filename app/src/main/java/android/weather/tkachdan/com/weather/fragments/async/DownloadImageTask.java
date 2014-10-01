@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.weather.tkachdan.com.weather.fragments.entity.ForecastEntity;
 import android.weather.tkachdan.com.weather.fragments.utils.BitmapUtil;
 import android.widget.ImageView;
 
@@ -14,9 +15,18 @@ import java.io.InputStream;
  */
 public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
     ImageView bmImage;
+    ForecastEntity entity;
 
     public DownloadImageTask(ImageView bmImage) {
         this.bmImage = bmImage;
+    }
+
+    public DownloadImageTask(ForecastEntity entity) {
+        this.entity = entity;
+    }
+
+    public DownloadImageTask() {
+
     }
 
     protected Bitmap doInBackground(String... urls) {
@@ -35,7 +45,13 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
     protected void onPostExecute(Bitmap result) {
         BitmapUtil bitmapUtil = new BitmapUtil();
         result = bitmapUtil.getCroppedBitmap(result);
+//        this.bitmap = result;
+        if (bmImage != null)
+            bmImage.setImageBitmap(result);
 
-        bmImage.setImageBitmap(result);
+        if (entity != null) {
+            entity.setImageBitmap(result);
+        }
     }
+
 }

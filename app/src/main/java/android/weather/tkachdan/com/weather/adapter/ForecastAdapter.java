@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.weather.tkachdan.com.weather.R;
 import android.weather.tkachdan.com.weather.fragments.entity.ForecastEntity;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -25,7 +27,7 @@ public class ForecastAdapter extends ArrayAdapter<ForecastEntity> {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         View rowView = inflater.inflate(R.layout.fragment_second, parent, false);
-        /*ImageView imageView = (ImageView) rowView
+        ImageView imageView = (ImageView) rowView
                 .findViewById(R.id.forecastImage_imageView);
         TextView day = (TextView) rowView
                 .findViewById(R.id.day_textView);
@@ -34,12 +36,13 @@ public class ForecastAdapter extends ArrayAdapter<ForecastEntity> {
         TextView cond = (TextView) rowView
                 .findViewById(R.id.cond_forecast_textView);
 
-        imageView.setImageBitmap(this.getItem(position).getImage());
+        imageView.setImageBitmap(this.getItem(position).getImageBitmap());
         day.setText(this.getItem(position).getDate());
-        temp.setText(this.getItem(position).getTemp());
+        //TODO: make setting for different choices
+        temp.setText(this.getItem(position).getTemp_C());
         cond.setText(this.getItem(position)
                 .getWetherDesc());
-*/
+
         return rowView;
 
 
