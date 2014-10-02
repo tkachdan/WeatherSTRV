@@ -1,4 +1,4 @@
-package android.weather.tkachdan.com.weather.fragments.entity;
+package android.weather.tkachdan.com.weather.models;
 
 import java.util.ArrayList;
 import java.util.List;

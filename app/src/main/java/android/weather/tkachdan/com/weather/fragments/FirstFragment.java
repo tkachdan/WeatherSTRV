@@ -1,20 +1,31 @@
 package android.weather.tkachdan.com.weather.fragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.location.Location;
+import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.weather.tkachdan.com.weather.R;
-import android.weather.tkachdan.com.weather.fragments.async.DownloadImageTask;
-import android.weather.tkachdan.com.weather.fragments.entity.CurrentWeather;
-import android.weather.tkachdan.com.weather.fragments.utils.JsonParser;
+import android.weather.tkachdan.com.weather.async.DownloadImageTask;
+import android.weather.tkachdan.com.weather.models.CurrentWeather;
+import android.weather.tkachdan.com.weather.utils.JsonParser;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -40,7 +51,8 @@ import java.io.InputStreamReader;
  * Use the {@link FirstFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FirstFragment extends Fragment implements GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener {
+public class FirstFragment extends Fragment implements GooglePlayServicesClient.ConnectionCallbacks,
+        GooglePlayServicesClient.OnConnectionFailedListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -49,6 +61,7 @@ public class FirstFragment extends Fragment implements GooglePlayServicesClient.
     public static String JSON;
     public static Double LAT;
     public static Double LON;
+    private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -85,6 +98,42 @@ public class FirstFragment extends Fragment implements GooglePlayServicesClient.
         // Required empty public constructor
     }
 
+    // dialogType: 1. Location error OR 2. Internet error
+    public void showErrorDialog(String msg, final int dialogType) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Error");  // GPS not found
+        builder.setMessage(msg); // Want to enable?
+
+        builder.setCancelable(false);
+        builder.setPositiveButton("Turn on", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if (dialogType == 1)
+                    startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                if (dialogType == 2)
+                    startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+            }
+        });
+        builder.create().show();
+    }
+
+    private boolean servicesConnected() {
+        boolean result;
+        // Check that Google Play services is available
+        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            ProgressDialog dialog = new ProgressDialog(getActivity());
+            result = false;
+            showErrorDialog("Location should be turned on to proceed.", 1);
+        } else {
+            result = true;
+        }
+
+        return result;
+
+    }
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,30 +141,25 @@ public class FirstFragment extends Fragment implements GooglePlayServicesClient.
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
         mLocationClient = new LocationClient(getActivity().getApplicationContext(), this, this);
-
-
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-
-
         return inflater.inflate(R.layout.fragment_first, container, false);
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        mLocationClient.connect();
-
-
-        //TextView text = (TextView) getView().findViewById(R.id.area_textView);
-
-
+        if (servicesConnected()) {
+            if (mLocationClient == null) {
+                mLocationClient = new LocationClient(getActivity().getApplicationContext(), this, this);
+            }
+            mLocationClient.connect();
+        }
     }
 
     @Override
@@ -124,15 +168,31 @@ public class FirstFragment extends Fragment implements GooglePlayServicesClient.
         mLocationClient.disconnect();
     }
 
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
+    }
+
     @Override
     public void onConnected(Bundle bundle) {
-        Location location = mLocationClient.getLastLocation();
-        LAT = location.getLatitude();
-        LON = location.getLongitude();
-        new HttpAsyncTask().execute("http://api.worldweatheronline.com/free/v1/weather.ashx?q=" + LAT + "%2C" + LON + "&format=json&num_of_days=5&includelocation=yes&key=4ae48b676ad301da1f7fcb2c1e351b291c8223f0");
-        JSON = "http://api.worldweatheronline.com/free/v1/weather.ashx?q=" +
-                "" + LAT + "%2C" + LON + "&format=json&num_of_days=5&includelocat" +
-                "ion=yes&key=4ae48b676ad301da1f7fcb2c1e351b291c8223f0";
+        if (servicesConnected()) {
+
+            Location location = mLocationClient.getLastLocation();
+            LAT = location.getLatitude();
+            LON = location.getLongitude();
+            if (isNetworkAvailable()) {
+                new HttpAsyncTask().execute("http://api.worldweatheronline.com/free/v1/weather.ashx?q=" + LAT + "%2C" + LON + "&format=json&num_of_days=5&includelocation=yes&key=4ae48b676ad301da1f7fcb2c1e351b291c8223f0");
+                JSON = "http://api.worldweatheronline.com/free/v1/weather.ashx?q=" +
+                        "" + LAT + "%2C" + LON + "&format=json&num_of_days=5&includelocat" +
+                        "ion=yes&key=4ae48b676ad301da1f7fcb2c1e351b291c8223f0";
+            } else {
+                //TODO define constants
+                showErrorDialog("Internet should be turned on to proceed.", 2);
+            }
+        }
+
     }
 
     @Override
@@ -146,16 +206,29 @@ public class FirstFragment extends Fragment implements GooglePlayServicesClient.
     }
 
     private class HttpAsyncTask extends AsyncTask<String, Void, String> {
+        private ProgressDialog dialog;
         @Override
         protected String doInBackground(String... urls) {
 
             return GET(urls[0]);
         }
 
-        // onPostExecute displays the results of the AsyncTask.
+        public HttpAsyncTask() {
+            dialog = new ProgressDialog(getActivity());
+        }
+
+        protected void onPreExecute() {
+            this.dialog.setMessage("Progress start");
+            this.dialog.setCanceledOnTouchOutside(false);
+            this.dialog.show();
+
+        }
+
+
         @Override
         protected void onPostExecute(String result) {
-
+            this.dialog.dismiss();
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
             Log.d("json", result);
             CurrentWeather currentWeather = parseJson(result);
             imageURL = currentWeather.getWetherIconUrl();
@@ -164,9 +237,16 @@ public class FirstFragment extends Fragment implements GooglePlayServicesClient.
 
             TextView area = (TextView) getView().findViewById(R.id.area_textView);
             area.setText(currentWeather.getRegion() + ", " + currentWeather.getCoutry());
+            String chooseCelsiusFahrenheit = sharedPreferences.getString("temperature_list1", "0");
 
-            TextView temp = (TextView) getView().findViewById(R.id.temp_textView);
-            temp.setText(currentWeather.getTemp_C() + DEGREE + " | " + currentWeather.getWeatherDesc());
+            if (chooseCelsiusFahrenheit.equals("0")) {
+                TextView temp = (TextView) getView().findViewById(R.id.temp_textView);
+                temp.setText(currentWeather.getTemp_C() + DEGREE + "C | " + currentWeather.getWeatherDesc());
+            } else {
+                TextView temp = (TextView) getView().findViewById(R.id.temp_textView);
+                temp.setText(currentWeather.getTemp_F() + DEGREE + "F | " + currentWeather.getWeatherDesc());
+            }
+
 
             TextView humidity = (TextView) getView().findViewById(R.id.humidity_textView);
             humidity.setText(currentWeather.getHumidity() + "%");
@@ -175,8 +255,14 @@ public class FirstFragment extends Fragment implements GooglePlayServicesClient.
             TextView pressure = (TextView) getView().findViewById(R.id.pressure_textView);
             pressure.setText(currentWeather.getPressure() + " hPa");
 
-            TextView windSpeed = (TextView) getView().findViewById(R.id.wind_speed_textView);
-            windSpeed.setText(currentWeather.getWindspeedKmph() + " km/h");
+            String windSpeedChoose = sharedPreferences.getString("length_list", "0");
+            if (windSpeedChoose.equals("0")) {
+                TextView windSpeed = (TextView) getView().findViewById(R.id.wind_speed_textView);
+                windSpeed.setText(currentWeather.getWindspeedKmph() + " km/h");
+            } else {
+                TextView windSpeed = (TextView) getView().findViewById(R.id.wind_speed_textView);
+                windSpeed.setText(currentWeather.getWindspeedMiles() + " mil/h");
+            }
 
             TextView windDir = (TextView) getView().findViewById(R.id.wind_direction_textView);
             windDir.setText(currentWeather.getWindDir());
@@ -250,22 +336,14 @@ public class FirstFragment extends Fragment implements GooglePlayServicesClient.
 
     }
 
+
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);

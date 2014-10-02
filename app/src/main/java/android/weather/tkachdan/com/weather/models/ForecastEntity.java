@@ -1,4 +1,4 @@
-package android.weather.tkachdan.com.weather.fragments.entity;
+package android.weather.tkachdan.com.weather.models;
 
 import android.graphics.Bitmap;
 
@@ -72,5 +72,11 @@ public class ForecastEntity {
         this.temp_C = temp_C;
         this.temp_F = temp_F;
         this.wetherDesc = wetherDesc;
+    }
+
+    @Override
+    public String toString() {
+        return "Forecast for the next " + date + " is  " + wetherDesc + ", " +
+                temp_C + "/" + temp_F;
     }
 }

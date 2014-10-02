@@ -17,8 +17,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.weather.tkachdan.com.weather.adapter.NavDrawerListAdapter;
-import android.weather.tkachdan.com.weather.fragments.entity.NavDrawerItem;
+import android.weather.tkachdan.com.weather.adapters.NavDrawerListAdapter;
+import android.weather.tkachdan.com.weather.models.NavDrawerItem;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
@@ -80,6 +80,7 @@ public class NavigationDrawerFragment extends Fragment {
 
         // Select either the default item (0) or the last selected item.
         selectItem(mCurrentSelectedPosition);
+
     }
 
     @Override

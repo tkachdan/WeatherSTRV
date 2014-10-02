@@ -1,12 +1,12 @@
-package android.weather.tkachdan.com.weather.adapter;
+package android.weather.tkachdan.com.weather.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.weather.tkachdan.com.weather.R;
-import android.weather.tkachdan.com.weather.fragments.async.DownloadImageTask;
-import android.weather.tkachdan.com.weather.fragments.entity.ForecastEntity;
+import android.weather.tkachdan.com.weather.async.DownloadImageTask;
+import android.weather.tkachdan.com.weather.models.ForecastEntity;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,9 +18,20 @@ import java.util.List;
  */
 public class ForecastAdapter extends ArrayAdapter<ForecastEntity> {
 
+    Context context;
+    boolean isCelsius;
+
     public ForecastAdapter(Context context, List<ForecastEntity> objects) {
         super(context, R.layout.fragment_second, objects);
+        this.context = context;
     }
+
+    public ForecastAdapter(Context context, List<ForecastEntity> objects, boolean isCelsius) {
+        super(context, R.layout.fragment_second, objects);
+        this.context = context;
+        this.isCelsius = isCelsius;
+    }
+
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -32,6 +43,8 @@ public class ForecastAdapter extends ArrayAdapter<ForecastEntity> {
                 .findViewById(R.id.forecastImage_imageView);
         TextView day = (TextView) rowView
                 .findViewById(R.id.day_textView);
+
+
         TextView temp = (TextView) rowView
                 .findViewById(R.id.temp_forecast_textView);
         TextView cond = (TextView) rowView
@@ -41,7 +54,11 @@ public class ForecastAdapter extends ArrayAdapter<ForecastEntity> {
         new DownloadImageTask(imageView).execute(url);
         day.setText(this.getItem(position).getDate());
         //TODO: make setting for different choices
-        temp.setText(this.getItem(position).getTemp_C());
+        if (isCelsius) {
+            temp.setText(this.getItem(position).getTemp_C());
+        } else {
+            temp.setText(this.getItem(position).getTemp_F());
+        }
         cond.setText(this.getItem(position)
                 .getWetherDesc());
 

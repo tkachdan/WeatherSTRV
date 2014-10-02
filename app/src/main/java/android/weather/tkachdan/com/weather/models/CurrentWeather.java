@@ -1,4 +1,4 @@
-package android.weather.tkachdan.com.weather.fragments.entity;
+package android.weather.tkachdan.com.weather.models;
 
 /**
  * Created by tkachdan on 10/1/2014.

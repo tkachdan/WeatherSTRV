@@ -1,11 +1,11 @@
-package android.weather.tkachdan.com.weather.fragments.async;
+package android.weather.tkachdan.com.weather.async;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.weather.tkachdan.com.weather.fragments.entity.ForecastEntity;
-import android.weather.tkachdan.com.weather.fragments.utils.BitmapUtil;
+import android.weather.tkachdan.com.weather.models.ForecastEntity;
+import android.weather.tkachdan.com.weather.utils.BitmapUtil;
 import android.widget.ImageView;
 
 import java.io.InputStream;

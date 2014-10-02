@@ -1,18 +1,21 @@
 package android.weather.tkachdan.com.weather.fragments;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.weather.tkachdan.com.weather.R;
-import android.weather.tkachdan.com.weather.adapter.ForecastAdapter;
-import android.weather.tkachdan.com.weather.fragments.entity.ForecastEntity;
-import android.weather.tkachdan.com.weather.fragments.utils.JsonParser;
+import android.weather.tkachdan.com.weather.adapters.ForecastAdapter;
+import android.weather.tkachdan.com.weather.listeners.ListViewListener;
+import android.weather.tkachdan.com.weather.models.ForecastEntity;
+import android.weather.tkachdan.com.weather.utils.JsonParser;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -102,11 +105,6 @@ public class SecondFragment extends Fragment implements GooglePlayServicesClient
         new HttpAsyncTask().execute("http://api.worldweatheronline.com/free/v1/weather.ashx?q="
                 + FirstFragment.LAT + "%2C" + FirstFragment.LON + "&format=json&num_of_days=5&includelocatio" +
                 "n=yes&key=4ae48b676ad301da1f7fcb2c1e351b291c8223f0");
-
-
-        //forecast.add(first);
-
-
         return view;
 
 
@@ -147,18 +145,20 @@ public class SecondFragment extends Fragment implements GooglePlayServicesClient
             JsonParser parser = new JsonParser();
             forecast = parser.parseForecast();
 
-            for (ForecastEntity e : forecast) {
-                String imageUrl = e.getImage();
 
-                // AsyncTask task = new DownloadImageTask(e)
-                //       .execute(imageUrl);
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            String chooseCelsiusFahrenheit = sharedPreferences.getString("temperature_list1", "0");
+            if (chooseCelsiusFahrenheit.equals("0")) {
+                adapter = new ForecastAdapter(getActivity(), forecast, true);
+            } else {
 
-
+                adapter = new ForecastAdapter(getActivity(), forecast);
             }
-            adapter = new ForecastAdapter(getActivity(), forecast);
+
             View view = getView();
             listView = (ListView) view
                     .findViewById(R.id.listView);
+            listView.setOnItemLongClickListener(new ListViewListener(getActivity()));
             listView.setAdapter(adapter);
 
         }
@@ -180,22 +180,13 @@ public class SecondFragment extends Fragment implements GooglePlayServicesClient
         InputStream inputStream = null;
         String result = "";
         try {
-
-            // create HttpClient
             HttpClient httpclient = new DefaultHttpClient();
-
-            // make GET request to the given URL
             HttpResponse httpResponse = httpclient.execute(new HttpGet(url));
-
-            // receive response as inputStream
             inputStream = httpResponse.getEntity().getContent();
-
-            // convert inputstream to string
             if (inputStream != null)
                 result = convertInputStreamToString(inputStream);
             else
-                result = "Did not work!";
-
+                result = "Error!";
         } catch (Exception e) {
             Log.d("InputStream", e.getLocalizedMessage());
         }
@@ -215,6 +206,7 @@ public class SecondFragment extends Fragment implements GooglePlayServicesClient
         super.onAttach(activity);
         try {
             mListener = (OnFragmentInteractionListener) activity;
+
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");

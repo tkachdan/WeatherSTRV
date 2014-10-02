@@ -1,4 +1,4 @@
-package android.weather.tkachdan.com.weather.fragments.async;
+package android.weather.tkachdan.com.weather.async;
 
 import android.os.AsyncTask;
 import android.util.Log;

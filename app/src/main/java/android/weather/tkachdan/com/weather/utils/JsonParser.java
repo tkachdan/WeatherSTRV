@@ -1,9 +1,9 @@
-package android.weather.tkachdan.com.weather.fragments.utils;
+package android.weather.tkachdan.com.weather.utils;
 
 import android.util.Log;
 import android.weather.tkachdan.com.weather.fragments.FirstFragment;
-import android.weather.tkachdan.com.weather.fragments.entity.CurrentWeather;
-import android.weather.tkachdan.com.weather.fragments.entity.ForecastEntity;
+import android.weather.tkachdan.com.weather.models.CurrentWeather;
+import android.weather.tkachdan.com.weather.models.ForecastEntity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -46,7 +46,8 @@ public class JsonParser {
                 wether_desc = index.getJSONArray("weatherDesc").getJSONObject(0).getString("value");
                 imageURL = index.getJSONArray("weatherIconUrl").getJSONObject(0).getString("value");
 
-                ForecastEntity entity = new ForecastEntity(imageURL, day, temp_C + FirstFragment.DEGREE + "C", temp_F, wether_desc);
+                ForecastEntity entity = new ForecastEntity(imageURL, day, temp_C + FirstFragment.DEGREE + "C",
+                        temp_F + FirstFragment.DEGREE + "F", wether_desc);
                 list.add(entity);
 
             } catch (Exception e) {
@@ -76,7 +77,7 @@ public class JsonParser {
                 return "Friday";
 
             case Calendar.SATURDAY:
-                return "Satruday";
+                return "Saturday";
 
             case Calendar.SUNDAY:
                 return "Sunday";

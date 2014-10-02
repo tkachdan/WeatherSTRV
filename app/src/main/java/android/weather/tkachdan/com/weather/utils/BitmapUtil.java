@@ -1,4 +1,4 @@
-package android.weather.tkachdan.com.weather.fragments.utils;
+package android.weather.tkachdan.com.weather.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;

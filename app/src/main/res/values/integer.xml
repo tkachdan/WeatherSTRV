@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <integer name="temp_C">0</integer>
+
+    <integer name="temp_F">1</integer>
+</resources>

@@ -1,4 +1,4 @@
-package android.weather.tkachdan.com.weather.adapter;
+package android.weather.tkachdan.com.weather.adapters;
 
 import android.app.Activity;
 import android.content.Context;
@@ -8,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.weather.tkachdan.com.weather.R;
-import android.weather.tkachdan.com.weather.fragments.entity.NavDrawerItem;
+import android.weather.tkachdan.com.weather.models.NavDrawerItem;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;

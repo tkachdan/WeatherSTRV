@@ -1,6 +1,7 @@
 package android.weather.tkachdan.com.weather;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.weather.tkachdan.com.weather.async.SettingsActivity;
 import android.weather.tkachdan.com.weather.fragments.FirstFragment;
 import android.weather.tkachdan.com.weather.fragments.SecondFragment;
 import android.widget.TextView;
@@ -44,6 +46,7 @@ public class MainActivity extends ActionBarActivity
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
 
+
         //mLocationClient = new LocationClient(this, this, this);
 
         // Set up the drawer.
@@ -71,8 +74,6 @@ public class MainActivity extends ActionBarActivity
     public void onSectionAttached(int number) {
         Fragment fragment = null;
         switch (number) {
-// Insert the fragment by replacing any existing fragment
-
             case 1:
                 fragment = firstFragment;
                 mTitle = "Today";
@@ -86,7 +87,7 @@ public class MainActivity extends ActionBarActivity
         }
         if (fragment != null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction()
+            fragmentManager.beginTransaction().addToBackStack("")
                     .replace(R.id.container, fragment)
                     .commit();
         }
@@ -121,7 +122,8 @@ public class MainActivity extends ActionBarActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
-            return true;
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }
