@@ -45,7 +45,6 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
     protected void onPostExecute(Bitmap result) {
         BitmapUtil bitmapUtil = new BitmapUtil();
         result = bitmapUtil.getCroppedBitmap(result);
-//        this.bitmap = result;
         if (bmImage != null)
             bmImage.setImageBitmap(result);
 

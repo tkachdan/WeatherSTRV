@@ -2,8 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="android.weather.tkachdan.com.weather.fragments.FirstFragment"
-    android:background="#ffffffff">
+    tools:context="android.weather.tkachdan.com.weather.fragments.TodayFragment"
+    android:background="@color/white">
 
     <RelativeLayout
         android:layout_width="fill_parent"
@@ -32,7 +32,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
             android:textSize="12dip"
-            android:textColor="#404040"
+            android:textColor="@color/text_details_black_color"
             android:fontFamily="sans-serif-light" />
 
         <TextView
@@ -44,7 +44,7 @@
             android:layout_below="@+id/area_textView"
             android:layout_centerHorizontal="true"
             android:textSize="33dip"
-            android:textColor="#333333"
+            android:textColor="@color/text_black_color"
             android:singleLine="false"
             android:fontFamily="sans-serif-medium"
 
@@ -129,7 +129,7 @@
                     android:textSize="20dip"
                     android:paddingRight="10dp"
                     android:fontFamily="sans-serif-medium"
-                    android:textColor="#404040" />
+                    android:textColor="@color/text_details_black_color" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -142,7 +142,7 @@
                     android:layout_gravity="center_horizontal"
                     android:paddingLeft="18dp"
                     android:fontFamily="sans-serif-medium"
-                    android:textColor="#404040" />
+                    android:textColor="@color/text_details_black_color" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -155,7 +155,7 @@
                     android:layout_marginLeft="50dp"
                     android:textSize="20dip"
                     android:fontFamily="sans-serif-medium"
-                    android:textColor="#404040" />
+                    android:textColor="@color/text_details_black_color" />
 
             </TableRow>
 
@@ -207,7 +207,7 @@
                     android:textSize="20dip"
                     android:layout_marginRight="40dp"
                     android:fontFamily="sans-serif-medium"
-                    android:textColor="#404040" />
+                    android:textColor="@color/text_details_black_color" />
 
                 <TextView
 
@@ -220,7 +220,7 @@
                     android:textSize="20dip"
                     android:layout_marginLeft="50dp"
                     android:fontFamily="sans-serif-medium"
-                    android:textColor="#404040" />
+                    android:textColor="@color/text_details_black_color" />
 
 
             </TableRow>

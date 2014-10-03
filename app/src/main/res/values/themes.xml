@@ -6,7 +6,12 @@
 
         <!-- Support library compatibility -->
         <item name="actionBarStyle">@style/MyActionBar</item>
+        <item name="android:actionOverflowButtonStyle">
+            @style/Widget.AppCompat.Base.ActionButton.Overflow
+        </item>
+
     </style>
+
 
     <!-- ActionBar styles -->
     <style name="MyActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">

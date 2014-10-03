@@ -14,15 +14,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.weather.tkachdan.com.weather.async.SettingsActivity;
-import android.weather.tkachdan.com.weather.fragments.FirstFragment;
-import android.weather.tkachdan.com.weather.fragments.SecondFragment;
+import android.weather.tkachdan.com.weather.fragments.ForecastFragment;
+import android.weather.tkachdan.com.weather.fragments.TodayFragment;
 import android.widget.TextView;
 
 
 public class MainActivity extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, FirstFragment.OnFragmentInteractionListener,
-        SecondFragment.OnFragmentInteractionListener {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, TodayFragment.OnFragmentInteractionListener,
+        ForecastFragment.OnFragmentInteractionListener {
 
     Fragment firstFragment;
     Fragment secondFragment;
@@ -39,8 +38,8 @@ public class MainActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        firstFragment = new FirstFragment();
-        secondFragment = new SecondFragment();
+        firstFragment = new TodayFragment();
+        secondFragment = new ForecastFragment();
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -76,13 +75,13 @@ public class MainActivity extends ActionBarActivity
         switch (number) {
             case 1:
                 fragment = firstFragment;
-                mTitle = "Today";
+                mTitle = getString(R.string.Today);
                 TextView text = (TextView) findViewById(R.id.tvTitle);
 
                 break;
             case 2:
                 fragment = secondFragment;
-                mTitle = "Forecast";
+                mTitle = getString(R.string.Forecast);
                 break;
         }
         if (fragment != null) {
@@ -110,6 +109,7 @@ public class MainActivity extends ActionBarActivity
             // decide what to show in the action bar.
             getMenuInflater().inflate(R.menu.main, menu);
             restoreActionBar();
+
             return true;
         }
         return super.onCreateOptionsMenu(menu);
@@ -161,7 +161,7 @@ public class MainActivity extends ActionBarActivity
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+            View rootView = inflater.inflate(R.layout.fragment_place_holder, container, false);
             return rootView;
         }
 

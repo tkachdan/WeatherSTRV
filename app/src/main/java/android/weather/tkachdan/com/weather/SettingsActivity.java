@@ -11,7 +11,6 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.weather.tkachdan.com.weather.R;
 
 import java.util.List;
 

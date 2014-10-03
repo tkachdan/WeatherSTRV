@@ -36,9 +36,9 @@ public class HttpAsyncForecastTask extends AsyncTask<String, Void, String> {
     ArrayAdapter<ForecastEntity> adapter;
     ListView listView;
 
-    public HttpAsyncTask(View view, Activity activity, String imageURL,
-                         List<ForecastEntity> forecast,
-                         ArrayAdapter<ForecastEntity> adapter, ListView listView) {
+    public HttpAsyncForecastTask(View view, Activity activity, String imageURL,
+                                 List<ForecastEntity> forecast,
+                                 ArrayAdapter<ForecastEntity> adapter, ListView listView) {
         this.view = view;
         this.activity = activity;
         this.imageURL = imageURL;

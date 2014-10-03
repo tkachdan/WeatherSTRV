@@ -1,7 +1,6 @@
 package android.weather.tkachdan.com.weather.async;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -38,9 +37,9 @@ public class GetJsonTask extends AsyncTask<String, String, String> {
                 throw new IOException(statusLine.getReasonPhrase());
             }
         } catch (ClientProtocolException e) {
-            //TODO Handle problems..
+
         } catch (IOException e) {
-            //TODO Handle problems..
+
         }
         return responseString;
     }
@@ -48,6 +47,6 @@ public class GetJsonTask extends AsyncTask<String, String, String> {
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
-        Log.d("json", result);
+        //Log.d("json", result);
     }
 }

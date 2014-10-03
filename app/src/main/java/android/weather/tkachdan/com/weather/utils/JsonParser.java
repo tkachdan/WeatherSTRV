@@ -1,7 +1,7 @@
 package android.weather.tkachdan.com.weather.utils;
 
 import android.util.Log;
-import android.weather.tkachdan.com.weather.fragments.FirstFragment;
+import android.weather.tkachdan.com.weather.fragments.TodayFragment;
 import android.weather.tkachdan.com.weather.models.CurrentWeather;
 import android.weather.tkachdan.com.weather.models.ForecastEntity;
 
@@ -36,7 +36,7 @@ public class JsonParser {
             JSONObject all = null;
 
             try {
-                all = new JSONObject(FirstFragment.JSON);
+                all = new JSONObject(TodayFragment.JSON);
                 JSONObject data = all.getJSONObject("data");
                 JSONArray weather = data.getJSONArray("weather");
                 JSONObject index = weather.getJSONObject(i);
@@ -46,8 +46,8 @@ public class JsonParser {
                 wether_desc = index.getJSONArray("weatherDesc").getJSONObject(0).getString("value");
                 imageURL = index.getJSONArray("weatherIconUrl").getJSONObject(0).getString("value");
 
-                ForecastEntity entity = new ForecastEntity(imageURL, day, temp_C + FirstFragment.DEGREE + "C",
-                        temp_F + FirstFragment.DEGREE + "F", wether_desc);
+                ForecastEntity entity = new ForecastEntity(imageURL, day, temp_C + TodayFragment.DEGREE + "C",
+                        temp_F + TodayFragment.DEGREE + "F", wether_desc);
                 list.add(entity);
 
             } catch (Exception e) {

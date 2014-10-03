@@ -22,12 +22,12 @@ public class ForecastAdapter extends ArrayAdapter<ForecastEntity> {
     boolean isCelsius;
 
     public ForecastAdapter(Context context, List<ForecastEntity> objects) {
-        super(context, R.layout.fragment_second, objects);
+        super(context, R.layout.fragment_forecast, objects);
         this.context = context;
     }
 
     public ForecastAdapter(Context context, List<ForecastEntity> objects, boolean isCelsius) {
-        super(context, R.layout.fragment_second, objects);
+        super(context, R.layout.fragment_forecast, objects);
         this.context = context;
         this.isCelsius = isCelsius;
     }
@@ -38,7 +38,7 @@ public class ForecastAdapter extends ArrayAdapter<ForecastEntity> {
         LayoutInflater inflater = (LayoutInflater) this.getContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        View rowView = inflater.inflate(R.layout.custome_listview, parent, false);
+        View rowView = inflater.inflate(R.layout.forecast_list_view, parent, false);
         ImageView imageView = (ImageView) rowView
                 .findViewById(R.id.forecastImage_imageView);
         TextView day = (TextView) rowView
@@ -53,7 +53,6 @@ public class ForecastAdapter extends ArrayAdapter<ForecastEntity> {
         String url = en.getImage();
         new DownloadImageTask(imageView).execute(url);
         day.setText(this.getItem(position).getDate());
-        //TODO: make setting for different choices
         if (isCelsius) {
             temp.setText(this.getItem(position).getTemp_C());
         } else {

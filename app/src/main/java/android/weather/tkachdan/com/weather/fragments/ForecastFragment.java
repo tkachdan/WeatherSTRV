@@ -87,11 +87,12 @@ public class ForecastFragment extends Fragment implements GooglePlayServicesClie
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_forecast, container, false);
         forecast = new ArrayList<ForecastEntity>();
-        new HttpAsyncForecastTask(view,getActivity(),"",forecast,adapter,listView).execute("http://api.worldweatheronline.com/free/v1/weather.ashx?q="
+        new HttpAsyncForecastTask(view, getActivity(), "", forecast, adapter, listView).execute("http://api.worldweatheronline.com/free/v1/weather.ashx?q="
                 + TodayFragment.LAT + "%2C" + TodayFragment.LON + "&format=json&num_of_days=5&includelocatio" +
                 "n=yes&key=4ae48b676ad301da1f7fcb2c1e351b291c8223f0");
         return view;
     }
+
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
