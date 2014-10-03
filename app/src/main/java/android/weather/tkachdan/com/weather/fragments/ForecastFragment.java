@@ -1,21 +1,15 @@
 package android.weather.tkachdan.com.weather.fragments;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.weather.tkachdan.com.weather.R;
-import android.weather.tkachdan.com.weather.adapters.ForecastAdapter;
-import android.weather.tkachdan.com.weather.listeners.ListViewListener;
+import android.weather.tkachdan.com.weather.async.HttpAsyncForecastTask;
 import android.weather.tkachdan.com.weather.models.ForecastEntity;
-import android.weather.tkachdan.com.weather.utils.JsonParser;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -24,27 +18,18 @@ import android.widget.TextView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link SecondFragment.OnFragmentInteractionListener} interface
+ * {@link ForecastFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link SecondFragment#newInstance} factory method to
+ * Use the {@link ForecastFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SecondFragment extends Fragment implements GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener {
+public class ForecastFragment extends Fragment implements GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -75,8 +60,8 @@ public class SecondFragment extends Fragment implements GooglePlayServicesClient
      * @return A new instance of fragment SecondFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static SecondFragment newInstance(String param1, String param2) {
-        SecondFragment fragment = new SecondFragment();
+    public static ForecastFragment newInstance(String param1, String param2) {
+        ForecastFragment fragment = new ForecastFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -84,7 +69,7 @@ public class SecondFragment extends Fragment implements GooglePlayServicesClient
         return fragment;
     }
 
-    public SecondFragment() {
+    public ForecastFragment() {
         // Required empty public constructor
     }
 
@@ -100,100 +85,13 @@ public class SecondFragment extends Fragment implements GooglePlayServicesClient
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_second, container, false);
+        View view = inflater.inflate(R.layout.fragment_forecast, container, false);
         forecast = new ArrayList<ForecastEntity>();
-        new HttpAsyncTask().execute("http://api.worldweatheronline.com/free/v1/weather.ashx?q="
-                + FirstFragment.LAT + "%2C" + FirstFragment.LON + "&format=json&num_of_days=5&includelocatio" +
+        new HttpAsyncForecastTask(view,getActivity(),"",forecast,adapter,listView).execute("http://api.worldweatheronline.com/free/v1/weather.ashx?q="
+                + TodayFragment.LAT + "%2C" + TodayFragment.LON + "&format=json&num_of_days=5&includelocatio" +
                 "n=yes&key=4ae48b676ad301da1f7fcb2c1e351b291c8223f0");
         return view;
-
-
     }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-
-    }
-
-    @Override
-    public void onConnected(Bundle bundle) {
-
-    }
-
-    @Override
-    public void onDisconnected() {
-
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-
-    }
-
-    private class HttpAsyncTask extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... urls) {
-
-            return GET(urls[0]);
-        }
-
-        // onPostExecute displays the results of the AsyncTask.
-        @Override
-        protected void onPostExecute(String result) {
-            JsonParser parser = new JsonParser();
-            forecast = parser.parseForecast();
-
-
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            String chooseCelsiusFahrenheit = sharedPreferences.getString("temperature_list1", "0");
-            if (chooseCelsiusFahrenheit.equals("0")) {
-                adapter = new ForecastAdapter(getActivity(), forecast, true);
-            } else {
-
-                adapter = new ForecastAdapter(getActivity(), forecast);
-            }
-
-            View view = getView();
-            listView = (ListView) view
-                    .findViewById(R.id.listView);
-            listView.setOnItemLongClickListener(new ListViewListener(getActivity()));
-            listView.setAdapter(adapter);
-
-        }
-    }
-
-    private static String convertInputStreamToString(InputStream inputStream) throws IOException {
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-        String line = "";
-        String result = "";
-        while ((line = bufferedReader.readLine()) != null)
-            result += line;
-
-        inputStream.close();
-        return result;
-
-    }
-
-    public static String GET(String url) {
-        InputStream inputStream = null;
-        String result = "";
-        try {
-            HttpClient httpclient = new DefaultHttpClient();
-            HttpResponse httpResponse = httpclient.execute(new HttpGet(url));
-            inputStream = httpResponse.getEntity().getContent();
-            if (inputStream != null)
-                result = convertInputStreamToString(inputStream);
-            else
-                result = "Error!";
-        } catch (Exception e) {
-            Log.d("InputStream", e.getLocalizedMessage());
-        }
-
-        return result;
-    }
-
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
@@ -232,6 +130,28 @@ public class SecondFragment extends Fragment implements GooglePlayServicesClient
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+
+    }
+
+    @Override
+    public void onDisconnected() {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
     }
 
 }

@@ -6,54 +6,37 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.weather.tkachdan.com.weather.R;
-import android.weather.tkachdan.com.weather.async.DownloadImageTask;
+import android.weather.tkachdan.com.weather.async.HttpAsyncTask;
 import android.weather.tkachdan.com.weather.models.CurrentWeather;
-import android.weather.tkachdan.com.weather.utils.JsonParser;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.location.LocationClient;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link FirstFragment.OnFragmentInteractionListener} interface
+ * {@link TodayFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link FirstFragment#newInstance} factory method to
+ * Use the {@link TodayFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FirstFragment extends Fragment implements GooglePlayServicesClient.ConnectionCallbacks,
+public class TodayFragment extends Fragment implements GooglePlayServicesClient.ConnectionCallbacks,
         GooglePlayServicesClient.OnConnectionFailedListener {
-    // TODO: Rename parameter arguments, choose names that match
+
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -84,9 +67,8 @@ public class FirstFragment extends Fragment implements GooglePlayServicesClient.
      * @param param2 Parameter 2.
      * @return A new instance of fragment FirstFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static FirstFragment newInstance(String param1, String param2) {
-        FirstFragment fragment = new FirstFragment();
+    public static TodayFragment newInstance(String param1, String param2) {
+        TodayFragment fragment = new TodayFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -94,8 +76,8 @@ public class FirstFragment extends Fragment implements GooglePlayServicesClient.
         return fragment;
     }
 
-    public FirstFragment() {
-        // Required empty public constructor
+    public TodayFragment() {
+
     }
 
     // dialogType: 1. Location error OR 2. Internet error
@@ -148,7 +130,7 @@ public class FirstFragment extends Fragment implements GooglePlayServicesClient.
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_first, container, false);
+        return inflater.inflate(R.layout.fragment_today, container, false);
     }
 
     @Override
@@ -183,12 +165,16 @@ public class FirstFragment extends Fragment implements GooglePlayServicesClient.
             LAT = location.getLatitude();
             LON = location.getLongitude();
             if (isNetworkAvailable()) {
-                new HttpAsyncTask().execute("http://api.worldweatheronline.com/free/v1/weather.ashx?q=" + LAT + "%2C" + LON + "&format=json&num_of_days=5&includelocation=yes&key=4ae48b676ad301da1f7fcb2c1e351b291c8223f0");
+                View view = getView();
+                Activity activity = getActivity();
+                new HttpAsyncTask(activity, imageURL, view).execute("http://api.worldweatheronline.com/free/v1/weather.ashx?q=" + LAT
+                        + "%2C" + LON + "&format=json&num_of_days=5&includelocation=yes" +
+                        "&key=4ae48b676ad301da1f7fcb2c1e351b291c8223f0");
                 JSON = "http://api.worldweatheronline.com/free/v1/weather.ashx?q=" +
                         "" + LAT + "%2C" + LON + "&format=json&num_of_days=5&includelocat" +
                         "ion=yes&key=4ae48b676ad301da1f7fcb2c1e351b291c8223f0";
             } else {
-                //TODO define constants
+
                 showErrorDialog("Internet should be turned on to proceed.", 2);
             }
         }
@@ -205,118 +191,6 @@ public class FirstFragment extends Fragment implements GooglePlayServicesClient.
 
     }
 
-    private class HttpAsyncTask extends AsyncTask<String, Void, String> {
-        private ProgressDialog dialog;
-        @Override
-        protected String doInBackground(String... urls) {
-
-            return GET(urls[0]);
-        }
-
-        public HttpAsyncTask() {
-            dialog = new ProgressDialog(getActivity());
-        }
-
-        protected void onPreExecute() {
-            this.dialog.setMessage("Progress start");
-            this.dialog.setCanceledOnTouchOutside(false);
-            this.dialog.show();
-
-        }
-
-
-        @Override
-        protected void onPostExecute(String result) {
-            this.dialog.dismiss();
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            Log.d("json", result);
-            CurrentWeather currentWeather = parseJson(result);
-            imageURL = currentWeather.getWetherIconUrl();
-            new DownloadImageTask((ImageView) getView().findViewById(R.id.imageView))
-                    .execute(currentWeather.getWetherIconUrl());
-
-            TextView area = (TextView) getView().findViewById(R.id.area_textView);
-            area.setText(currentWeather.getRegion() + ", " + currentWeather.getCoutry());
-            String chooseCelsiusFahrenheit = sharedPreferences.getString("temperature_list1", "0");
-
-            if (chooseCelsiusFahrenheit.equals("0")) {
-                TextView temp = (TextView) getView().findViewById(R.id.temp_textView);
-                temp.setText(currentWeather.getTemp_C() + DEGREE + "C | " + currentWeather.getWeatherDesc());
-            } else {
-                TextView temp = (TextView) getView().findViewById(R.id.temp_textView);
-                temp.setText(currentWeather.getTemp_F() + DEGREE + "F | " + currentWeather.getWeatherDesc());
-            }
-
-
-            TextView humidity = (TextView) getView().findViewById(R.id.humidity_textView);
-            humidity.setText(currentWeather.getHumidity() + "%");
-            TextView precip = (TextView) getView().findViewById(R.id.precip_textView);
-            precip.setText(currentWeather.getPrecipMM() + " mm");
-            TextView pressure = (TextView) getView().findViewById(R.id.pressure_textView);
-            pressure.setText(currentWeather.getPressure() + " hPa");
-
-            String windSpeedChoose = sharedPreferences.getString("length_list", "0");
-            if (windSpeedChoose.equals("0")) {
-                TextView windSpeed = (TextView) getView().findViewById(R.id.wind_speed_textView);
-                windSpeed.setText(currentWeather.getWindspeedKmph() + " km/h");
-            } else {
-                TextView windSpeed = (TextView) getView().findViewById(R.id.wind_speed_textView);
-                windSpeed.setText(currentWeather.getWindspeedMiles() + " mil/h");
-            }
-
-            TextView windDir = (TextView) getView().findViewById(R.id.wind_direction_textView);
-            windDir.setText(currentWeather.getWindDir());
-
-
-        }
-    }
-
-    public CurrentWeather parseJson(String json) {
-        JsonParser parser = new JsonParser();
-        return parser.parse(json);
-    }
-
-    private static String convertInputStreamToString(InputStream inputStream) throws IOException {
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-        String line = "";
-        String result = "";
-        while ((line = bufferedReader.readLine()) != null)
-            result += line;
-
-        inputStream.close();
-        return result;
-
-    }
-
-    public static String GET(String url) {
-        InputStream inputStream = null;
-        String result = "";
-        try {
-
-            // create HttpClient
-            HttpClient httpclient = new DefaultHttpClient();
-
-            // make GET request to the given URL
-            HttpResponse httpResponse = httpclient.execute(new HttpGet(url));
-
-            // receive response as inputStream
-            inputStream = httpResponse.getEntity().getContent();
-
-            // convert inputstream to string
-            if (inputStream != null)
-                result = convertInputStreamToString(inputStream);
-            else
-                result = "Did not work!";
-
-        } catch (Exception e) {
-            Log.d("InputStream", e.getLocalizedMessage());
-        }
-        JSON = result;
-        return result;
-    }
-
-
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
@@ -332,8 +206,6 @@ public class FirstFragment extends Fragment implements GooglePlayServicesClient.
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
         }
-
-
     }
 
 
@@ -345,7 +217,7 @@ public class FirstFragment extends Fragment implements GooglePlayServicesClient.
 
 
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
+
         public void onFragmentInteraction(Uri uri);
     }
 

@@ -17,7 +17,7 @@ import java.io.IOException;
 /**
  * Created by tkachdan on 10/1/2014.
  */
-public class RequestTask extends AsyncTask<String, String, String> {
+public class GetJsonTask extends AsyncTask<String, String, String> {
 
     @Override
     protected String doInBackground(String... uri) {

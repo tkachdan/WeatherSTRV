@@ -1,4 +1,4 @@
-package android.weather.tkachdan.com.weather.async;
+package android.weather.tkachdan.com.weather;
 
 import android.annotation.TargetApi;
 import android.app.ActionBar;
